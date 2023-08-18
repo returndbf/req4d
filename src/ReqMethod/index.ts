@@ -2,14 +2,29 @@ import axios, {AxiosResponse} from "axios";
 import {PromiseData} from "../@types/ResType";
 import {IData} from "../index";
 import "reflect-metadata";
+import { PartialConfig} from "../@types/Config";
 
-export const Get = <D>(url:string) :MethodDecorator =>{
+export const baseUrl = (BASE_URL:PartialConfig["baseUrl"]) :  PropertyDecorator =>{
+    return(target, propertyKey)=>{
+        Reflect.defineMetadata('BASE_URL', BASE_URL, target)
+        // console.log("PropertyDecorator");
+    }
+}
+const headers = (headers:PartialConfig['headers']) :PropertyDecorator =>{
+    return (target, propertyKey)=>{
+        Reflect.defineMetadata('headers', headers, target)
+    }
+}
+const getMetaData = (key:string,target:Object)=>{
+    return Reflect.getMetadata(key, target)
+}
+export const Get = (url:string) :MethodDecorator =>{
     return (target, propertyKey, descriptor:PropertyDescriptor) =>{
         const originalMethod = descriptor.value;
-        descriptor.value = async (...args: any[]) => {
-            const response:AxiosResponse<D> = await axios.get(url);
-            return originalMethod!.call(this, response.data, ...args);
-        };
+         descriptor.value = async (...args: any[]) => {
+            const response:AxiosResponse<IData<number>,any>= await axios.get(getMetaData('BASE_URL',target)+url);
+            return originalMethod(response.data)
+        }
     }
 }
 
@@ -23,29 +38,13 @@ export const Post = (url:string,params:Record<string, any>,body:Record<any, any>
     }
 }
 
-class Clazz {
-    public static BASE_URL = "http://117.50.184.140/"
-    // @Post()
-    // public postFn(){
-    //
-    // }
-}
-
-// function myDecorator(target: any) {
-//     console.log(target.staticProp); // 访问类的静态属性
-// }
 const Param  = ():ParameterDecorator=>{
     return (target:any)=>{
 
     }
 
 }
-const baseUrl = (BASE_URL:string) :PropertyDecorator =>{
-    return(target, propertyKey)=>{
-        Reflect.defineMetadata('BASE_URL', BASE_URL, target)
-        // console.log("PropertyDecorator");
-    }
-}
+
 const myDecorator  = (): MethodDecorator=>{
     return (target:any,propertyKey)=>{
         // Reflect.defineMetadata('BASE_URL', "http://117.50.184.140/", target)
@@ -55,24 +54,31 @@ const myDecorator  = (): MethodDecorator=>{
 }
 const classD = ():ClassDecorator =>{
     return (target)=>{
-        console.log(Reflect.getMetadata("BASE_URL", target.prototype));
-       // console.log("ClassDecorator")
+        // console.log(Reflect.getMetadata("BASE_URL", target.prototype.header));
+        // console.log( target.prototype.header)
     }
 }
 
 const param = ():ParameterDecorator=>{
     return (target)=>{
-        console.log(Reflect.getMetadata("BASE_URL", target));
+       // console.log(Reflect.getMetadata("BASE_URL", target));
         // console.log("ParameterDecorator")
     }
 }
 @classD()
 class MyClass {
-    @baseUrl("http://117.50.184.140/")
-     BASE_URL :string|undefined
-    @myDecorator()
-    myMethod(@param() param:any) {
-        // 方法体
-    }
+    // @baseUrl("http://117.50.184.140/")
+    //  BASE_URL :string|undefined
+    // @baseUrl("http://117.50.184.140/")
+    // @headers({
+    //     "Content-Type": "application/x-www-form-urlencoded"
+    // })
+    // config
+
+
+    // @myDecorator()
+    // myMethod(@param() param:any) {
+    //     // 方法体
+    // }
 }
 

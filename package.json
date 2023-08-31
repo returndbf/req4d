@@ -1,24 +1,31 @@
 {
   "name": "req4d",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "request,but use decorator",
   "main": "./dist/index.js",
   "scripts": {
     "build:types": "tsc",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "build": "npm run build:types && webpack"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node"
   },
   "keywords": [],
   "author": "",
   "license": "MIT",
   "devDependencies": {
+    "ts-jest": "^29.1.1",
     "ts-loader": "^9.4.4",
     "typescript": "^5.1.6",
     "webpack": "^5.88.1",
     "webpack-cli": "^5.1.4"
   },
   "dependencies": {
+    "@types/jest": "^29.5.4",
     "axios": "^1.4.0",
+    "jest": "^29.6.4",
     "reflect-metadata": "^0.1.13"
   }
 }

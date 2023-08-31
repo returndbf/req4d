@@ -3,6 +3,7 @@ import {PromiseData} from "../@types/ResType";
 import {IData} from "../index";
 import "reflect-metadata";
 import { PartialConfig} from "../@types/Config";
+import {GetConfig} from "../@types/ReqType";
 
 export const baseUrl = (BASE_URL:PartialConfig["baseUrl"]) :  PropertyDecorator =>{
     return(target, propertyKey)=>{
@@ -21,14 +22,15 @@ const getMetaData = (key:string,target:Object)=>{
 export const Get = (url:string) :MethodDecorator =>{
     return (target, propertyKey, descriptor:PropertyDescriptor) =>{
         const originalMethod = descriptor.value;
-         descriptor.value = async (...args: any[]) => {
+         descriptor.value = async (config?:GetConfig):Promise<IData<number>> => {
             const response:AxiosResponse<IData<number>,any>= await axios.get(getMetaData('BASE_URL',target)+url);
-            return originalMethod(response.data)
+            // return originalMethod(response.data)
+             return response.data
         }
     }
 }
 
-export const Post = (url:string,params:Record<string, any>,body:Record<any, any> | any,headers:Record<string, string>) :MethodDecorator=>{
+export const Post = (url:string,params:Record<string, any>,body:Record<any, any> | any) :MethodDecorator=>{
     return (target:any, propertyKey, descriptor:PropertyDescriptor) =>{
         // const originalMethod = descriptor.value;
         // descriptor.value = async (...args: any[]) => {
@@ -37,13 +39,23 @@ export const Post = (url:string,params:Record<string, any>,body:Record<any, any>
         // };
     }
 }
-
-const Param  = ():ParameterDecorator=>{
-    return (target:any)=>{
+export const returnData =():ParameterDecorator=>{
+    return (target: Object, propertyKey: string | symbol | undefined, parameterIndex: number) =>{
 
     }
-
 }
+export const afterRun =  (cb:()=>void):(target: any, propertyKey:any, descriptor: PropertyDescriptor) => void=>{
+    return (target:any, propertyKey, descriptor:PropertyDescriptor)=>{
+        // Reflect.set
+        // const originalMethod = descriptor.value;
+        //  descriptor.value().then(()=>{
+        //      cb()
+        //  })
+
+    }
+}
+
+
 
 const myDecorator  = (): MethodDecorator=>{
     return (target:any,propertyKey)=>{
@@ -82,3 +94,25 @@ class MyClass {
     // }
 }
 
+const f = ()=>{
+    function ReturnNumber(target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<() => {data:string}>) {
+        const originalMethod = descriptor.value;
+        descriptor.value = function() {
+            const result = originalMethod!.apply(this);
+            // 在这里使用类型断言来修改返回类型
+            return result as {data:string};
+        }
+    }
+    return ReturnNumber
+}
+
+
+class Example {
+    @f()
+    getValue() {
+        return {data:"1"};
+    }
+}
+
+const example = new Example();
+console.log(example.getValue()); // 输出: 10

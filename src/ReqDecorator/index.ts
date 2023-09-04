@@ -5,13 +5,15 @@ import axios, {AxiosResponse} from "axios";
 import {IData} from "../index";
 import {GetConfig, LoginFnParams, ReqAop, ReqReturnType} from "../@types/ReqType";
 import {AFTERAOP, BEFOREAOP, USEAFTERAOP, USEBEFOREAOP} from "../constant";
+import {CreateAxiosDefaults} from "axios/index";
 
+const RequestApp  = (config:CreateAxiosDefaults) :ClassDecorator =>{
+    return (target) =>{
 
-const config = (config: PartialConfig): ClassDecorator => {
-    return (target) => {
-        Reflect.defineMetadata('config', config, target.prototype)
     }
 }
+
+
 const BaseUrl = (baseUrl: string): ClassDecorator => {
     return (target) => {
         Reflect.defineMetadata('baseUrl', baseUrl, target.prototype)
@@ -30,12 +32,15 @@ const Get = (url: string): MethodDecorator => {
             if (getMetaData(USEAFTERAOP, target, propertyKey)) {
                 afterCb = getMetaData(AFTERAOP, target, propertyKey);
             }
-
             beforeCb()
             const baseUrl = getMetaData('baseUrl', target);
             const params = getMetaData('params', target);
             const response = await axios.get(baseUrl + url + params);
-            afterCb()
+            if(afterCb.length){
+                afterCb(response.data)
+            }else{
+                afterCb()
+            }
             return response.data
         }
     }
@@ -70,21 +75,20 @@ const ReqAop = (aopObj: ReqAop): MethodDecorator => {
             Reflect.defineMetadata(USEAFTERAOP, true, target, propertyKey);
             Reflect.defineMetadata('afterAop', afterCb, target, propertyKey);
         }
-
-
-
     }
 }
 
 const testBefore = () => {
     console.log("ReqAop testBefore")
 }
-const testAfter = () => {
-    console.log("ReqAop testAfter")
+const testAfter = (responseData:any) => {
+    console.log(responseData.data[0].mission_name)
 }
+
 
 @BaseUrl('http://117.50.184.140:8844')
 class Clazz {
+
     @Get('/user/queryReward')
     async getReward(): ReqReturnType<IData<number>> {
 

@@ -22,7 +22,7 @@ export interface LoginFnParams{
     refreshToken?:string
 }
 
-export interface ReqAop{
+export interface ReqAopType{
     beforeCb?:Function
     afterCb?:Function
 }

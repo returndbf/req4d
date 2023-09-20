@@ -5,12 +5,6 @@ import "reflect-metadata";
 import { PartialConfig} from "../@types/Config";
 import {GetConfig} from "../@types/ReqType";
 
-export const baseUrl = (BASE_URL:PartialConfig["baseUrl"]) :  PropertyDecorator =>{
-    return(target, propertyKey)=>{
-        Reflect.defineMetadata('BASE_URL', BASE_URL, target)
-        // console.log("PropertyDecorator");
-    }
-}
 const headers = (headers:PartialConfig['headers']) :PropertyDecorator =>{
     return (target, propertyKey)=>{
         Reflect.defineMetadata('headers', headers, target)

@@ -1,4 +1,4 @@
-import axios, {InternalAxiosRequestConfig} from 'axios';
+import axios, {AxiosInstance, AxiosRequestConfig, CreateAxiosDefaults, InternalAxiosRequestConfig} from 'axios';
 
 // 创建axios实例
 const instance = axios.create({
@@ -26,8 +26,17 @@ instance.interceptors.request.use(
 export default instance;
 
 
-export const  reqInterceptor = (cb:(config:InternalAxiosRequestConfig)=>{}) :ClassDecorator=>{
-    return (target)=>{
-
+export const reqInterceptor = (interceptor: (config: InternalAxiosRequestConfig) => InternalAxiosRequestConfig): ClassDecorator => {
+    return (target) => {
+        Reflect.defineMetadata("reqInterceptor", interceptor, target.prototype)
+        const axiosInstance = Reflect.getMetadata("axiosInstance", target) as AxiosInstance
+        axiosInstance.interceptors.request.use(interceptor)
     }
 }
+
+
+reqInterceptor((config) => {
+
+        return config
+    }
+)

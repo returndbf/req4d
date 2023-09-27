@@ -2,7 +2,7 @@ import "reflect-metadata"
 import {IData} from "../../index";
 import {  ReqReturnType} from "../../@types/ReqType";
 import {Get} from "../MethodDecorator/reqDecorator";
-import {ReqAop} from "../MethodAop/index"
+import {ReqAop} from "../MethodDecorator/Aop"
 import {Params} from "../MethodDecorator/reqDecorator";
 import {BaseUrl} from "../ClassDecorator";
 

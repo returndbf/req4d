@@ -2,13 +2,18 @@ import {getMetaData, paramsObjToStr} from "../../util";
 import {AFTERAOP, BEFOREAOP, USEAFTERAOP, USEBEFOREAOP} from "../../constant";
 import axios from "axios";
 import {GetConfig, LoginFnParams} from "../../@types/ReqType";
-import {aopRunWithReq} from "./Aop";
+import {aopRunWithReq, runReq} from "./Aop";
 
 export const Get = (url: string): MethodDecorator => {
     return (target: Object, propertyKey: string | symbol, descriptor: PropertyDescriptor) => {
         const originalMethod = descriptor.value;
         descriptor.value = async () => {
-            return await aopRunWithReq(url,target,propertyKey)
+            if(getMetaData(USEBEFOREAOP,target,propertyKey) || getMetaData(USEAFTERAOP,target,propertyKey)){
+                return await aopRunWithReq(url,target,propertyKey)
+            }else{
+                return await runReq(url,target,propertyKey)
+            }
+
         }
     }
 }

@@ -11,9 +11,9 @@ import {BaseUrl, ReqComponent} from "../ClassDecorator";
 const testBefore = () => {
     console.log("ReqAop testBefore")
 }
-const testAfter = (responseData: any) => {
-    console.log(responseData.data[0].mission_name)
-}
+// const testAfter = (responseData: any) => {
+//     console.log(responseData.data[0].mission_name)
+// }
 
 
 // @BaseUrl('http://117.50.184.140:8844')
@@ -29,13 +29,24 @@ class Clazz {
 
     @Params({date: '2023-08-29'})
     @Get('/mission/getDayMissions')
-    @ReqAop({beforeCb: testBefore, afterCb: testAfter})
+    @ReqAop({beforeCb: testBefore})
     async getDayMissions(): ReqReturnType<IData<any>> {
 
     }
-}
 
-new Clazz().getDayMissions().then((res) => {
+    @Params({date: '2023-10-01'})
+    @Get('/mission/getDayMissions')
+    // @ReqAop({beforeCb: testBefore, afterCb: testAfter})
+    async getDayMissionsAnother(): ReqReturnType<IData<any>> {
+
+    }
+}
+const C = new Clazz()
+C.getDayMissions().then((res) => {
+    console.log(res.data);
+})
+
+C.getDayMissionsAnother().then((res) => {
     console.log(res.data);
 })
 

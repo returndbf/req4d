@@ -28,17 +28,25 @@ export  const  aopRunWithReq = async (url:string,target: Object,propertyKey:stri
     if (getMetaData(USEAFTERAOP, target, propertyKey)) {
         afterCb = getMetaData(AFTERAOP, target, propertyKey);
     }
-    beforeCb()
+    beforeCb && beforeCb()
     //const baseUrl = getMetaData('baseUrl', target) || getMetaData('config',target).baseURL;
     // 获取方法装饰器的参数
     const params = getMetaData('params', target,propertyKey);
     // 获取reqComponent方法装饰器的axiosInstance
     const axiosInstance = getMetaData('axiosInstance', target)
     const response = await axiosInstance.get( url + params);
-    if (afterCb.length) {
-        afterCb(response.data)
+    if (afterCb && afterCb.length) {
+        afterCb && afterCb(response.data)
     } else {
-        afterCb()
+        afterCb && afterCb()
     }
+    return response.data
+}
+
+export const runReq = async (url:string,target: Object,propertyKey:string|symbol) =>{
+    const params = getMetaData('params', target,propertyKey);
+    // 获取reqComponent方法装饰器的axiosInstance
+    const axiosInstance = getMetaData('axiosInstance', target)
+    const response = await axiosInstance.get( url + params);
     return response.data
 }

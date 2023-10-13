@@ -4,7 +4,7 @@ import {  ReqReturnType} from "../../@types/ReqType";
 import {Get} from "../MethodDecorator/reqDecorator";
 import {ReqAop} from "../MethodDecorator/Aop"
 import {Params} from "../MethodDecorator/reqDecorator";
-import {BaseUrl} from "../ClassDecorator";
+import {BaseUrl, ReqComponent} from "../ClassDecorator";
 
 
 
@@ -16,7 +16,10 @@ const testAfter = (responseData: any) => {
 }
 
 
-@BaseUrl('http://117.50.184.140:8844')
+// @BaseUrl('http://117.50.184.140:8844')
+@ReqComponent({
+    baseURL: 'http://117.50.184.140:8844'
+})
 class Clazz {
 
     @Get('/user/queryReward')

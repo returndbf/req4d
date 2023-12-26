@@ -6,7 +6,6 @@ export const getMetaData = (key:string,target:Object,propertyKey?:string|symbol)
     }else{
         return Reflect.getMetadata(key, target)
     }
-
 }
 export const paramsObjToStr = (params:GetConfig['params'])=>{
     let paramsStr = '?'

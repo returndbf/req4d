@@ -1,7 +1,10 @@
-const USEAFTERAOP = 'useAfterAop'
-const USEBEFOREAOP ='useBeforeAop'
-const AFTERAOP = 'afterAop'
-const BEFOREAOP = 'beforeAop'
+const USE_AFTER_AOP = 'USE_AFTER_AOP'
+const USE_BEFORE_AOP ='USE_BEFORE_AOP'
+const AFTER_AOP = 'AFTER_AOP'
+const BEFORE_AOP = 'BEFORE_AOP'
 
-export {USEBEFOREAOP,USEAFTERAOP,AFTERAOP,BEFOREAOP}
+const PARAMS_INDEX = 'paramsIndex'
+const PARAMS = 'params'
+
+export {USE_BEFORE_AOP,USE_AFTER_AOP,AFTER_AOP,BEFORE_AOP,PARAMS_INDEX,PARAMS}
 

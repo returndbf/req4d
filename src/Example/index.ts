@@ -1,5 +1,5 @@
 import "reflect-metadata"
-import {IData} from "../index";
+
 import {ReqReturnType} from "../@types/ReqType";
 import {Get} from "../Decorator/MethodDecorator/reqDecorator";
 import {ReqAop} from "../Decorator/MethodDecorator/Aop"
@@ -13,12 +13,26 @@ import { parseDocument } from "yaml";
 // const testAfter = (responseData: any) => {
 //     console.log(responseData.data[0].mission_name)
 // }
+export interface IData<T> {
+    code: number,
+    msg: string,
+    data: T
+}
+
+export type promiseData<D> = Promise<IData<D>> | undefined | void
+
+// interface IReward {
+//     reward: number | undefined
+// }
+interface IResType {
+    reward: number | undefined
+}
+
 
 const file = fs.readFileSync("../extra.yml", "utf8");
-
 const doc = parseDocument(file);
 const remoteUrl  = doc.getIn(['reqConfig','remoteUrl']) as string;
-// @BaseUrl('http://117.50.184.140:8844')
+
 @ReqComponent({
     baseURL: remoteUrl
 })
@@ -33,6 +47,7 @@ class Clazz {
     async getDayMissions(@Params params:any): ReqReturnType<IData<any>> {
 
     }
+
 
 }
 const C = new Clazz()

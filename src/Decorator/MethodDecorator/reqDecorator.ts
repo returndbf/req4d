@@ -18,6 +18,7 @@ export const Get = (url: string): MethodDecorator => {
         const originalMethod = descriptor.value;
         descriptor.value = async (...args:any[]) => {
             const paramsIndex = getMetaData(PARAMS_INDEX,target,propertyKey)
+            console.log(paramsIndex,"paramsindex")
             const params = args[paramsIndex]
             Reflect.defineMetadata(PARAMS,params,target,propertyKey)
             Reflect.defineMetadata(REQ_METHOD,ReqMethodEnum.GET,target,propertyKey)

@@ -1,14 +1,15 @@
 import "reflect-metadata"
 
 import {ReqReturnType} from "../@types/ReqType";
-import {Get} from "../Decorator/MethodDecorator/reqDecorator";
+import {Get, Post} from "../Decorator/MethodDecorator/reqDecorator";
 import {ReqAop} from "../Decorator/MethodDecorator/Aop"
 // import {Params} from "../MethodDecorator/reqDecorator";
-import {Params} from "../Decorator/ArgumentDecorator/reqParams"
+import {Data, Params} from "../Decorator/ArgumentDecorator/reqParams"
 import {BaseUrl, ReqComponent} from "../Decorator/ClassDecorator";
 import axios from "axios";
 import fs from "fs";
 import { parseDocument } from "yaml";
+
 
 // const testAfter = (responseData: any) => {
 //     console.log(responseData.data[0].mission_name)
@@ -41,19 +42,22 @@ class Clazz {
     async getReward(): ReqReturnType<IData<number>> {
 
     }
-
     @Get('/mission/getDayMissions')
     // @ReqAop({beforeCb: testBefore})
-    async getDayMissions(@Params params:any): ReqReturnType<IData<any>> {
+    async getDayMissions(@Data data?:any,@Params params?:Record<string, any>): ReqReturnType<IData<any>> {
+    }
+    @Post('/cityjson?ie=utf-8')
+    async getIp(@Data data?:any):ReqReturnType<any>{
 
     }
-
-
 }
 const C = new Clazz()
-C.getDayMissions({date:'2023-12-26'}).then((res) => {
+const params = {date:'2023-12-26'}
+const data = {date:'2024-01-01'}
+C.getDayMissions(data,params).then((res) => {
     console.log(res);
 })
+
 
 
 

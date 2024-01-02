@@ -1,6 +1,5 @@
 import axios, {AxiosResponse} from "axios";
 import {PromiseData} from "../@types/ResType";
-import {IData} from "../index";
 import "reflect-metadata";
 import { PartialConfig} from "../@types/Config";
 import {GetConfig} from "../@types/ReqType";
@@ -13,26 +12,26 @@ const headers = (headers:PartialConfig['headers']) :PropertyDecorator =>{
 const getMetaData = (key:string,target:Object)=>{
     return Reflect.getMetadata(key, target)
 }
-export const Get = (url:string) :MethodDecorator =>{
-    return (target, propertyKey, descriptor:PropertyDescriptor) =>{
-        const originalMethod = descriptor.value;
-         descriptor.value = async (config?:GetConfig):Promise<IData<number>> => {
-            const response:AxiosResponse<IData<number>,any>= await axios.get(getMetaData('BASE_URL',target)+url);
-            // return originalMethod(response.data)
-             return response.data
-        }
-    }
-}
-
-export const Post = (url:string,params:Record<string, any>,body:Record<any, any> | any) :MethodDecorator=>{
-    return (target:any, propertyKey, descriptor:PropertyDescriptor) =>{
-        // const originalMethod = descriptor.value;
-        // descriptor.value = async (...args: any[]) => {
-        //     const response:AxiosResponse = await axios.post(url,body,{params,headers});
-        //     return originalMethod!.call(this, response.data, ...args);
-        // };
-    }
-}
+// export const Get = (url:string) :MethodDecorator =>{
+//     return (target, propertyKey, descriptor:PropertyDescriptor) =>{
+//         const originalMethod = descriptor.value;
+//          descriptor.value = async (config?:GetConfig):Promise<IData<number>> => {
+//             const response:AxiosResponse<IData<number>,any>= await axios.get(getMetaData('BASE_URL',target)+url);
+//             // return originalMethod(response.data)
+//              return response.data
+//         }
+//     }
+// }
+//
+// export const Post = (url:string,params:Record<string, any>,body:Record<any, any> | any) :MethodDecorator=>{
+//     return (target:any, propertyKey, descriptor:PropertyDescriptor) =>{
+//         // const originalMethod = descriptor.value;
+//         // descriptor.value = async (...args: any[]) => {
+//         //     const response:AxiosResponse = await axios.post(url,body,{params,headers});
+//         //     return originalMethod!.call(this, response.data, ...args);
+//         // };
+//     }
+// }
 export const returnData =():ParameterDecorator=>{
     return (target: Object, propertyKey: string | symbol | undefined, parameterIndex: number) =>{
 

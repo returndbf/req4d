@@ -4,11 +4,11 @@ const USE_BEFORE_AOP = 'USE_BEFORE_AOP'
 const AFTER_AOP = 'AFTER_AOP'
 const BEFORE_AOP = 'BEFORE_AOP'
 
-const PARAMS_INDEX = 'paramsIndex'
-const PARAMS = 'params'
+const QUERY_INDEX = 'queryIndex'
+const QUERY = 'query'
 
-const DATA_INDEX = 'dataIndex'
-const DATA = 'data'
+const BODY_INDEX = 'bodyIndex'
+const BODY = 'body'
 
 const REQ_METHOD = 'reqMethod'
 
@@ -26,10 +26,10 @@ export {
     USE_AFTER_AOP,
     AFTER_AOP,
     BEFORE_AOP,
-    PARAMS_INDEX,
-    PARAMS,
-    DATA_INDEX,
-    DATA,
+    QUERY_INDEX,
+    QUERY,
+    BODY_INDEX,
+    BODY,
     REQ_METHOD,
     ReqMethodEnum
 }

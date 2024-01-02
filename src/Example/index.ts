@@ -2,11 +2,8 @@ import "reflect-metadata"
 
 import {ReqReturnType} from "../@types/ReqType";
 import {Get, Post} from "../Decorator/MethodDecorator/reqDecorator";
-import {ReqAop} from "../Decorator/MethodDecorator/Aop"
-// import {Params} from "../MethodDecorator/reqDecorator";
-import {Data, Params} from "../Decorator/ArgumentDecorator/reqParams"
+import {Body, Query} from "../Decorator/ArgumentDecorator/reqParams"
 import {BaseUrl, ReqComponent} from "../Decorator/ClassDecorator";
-import axios from "axios";
 import fs from "fs";
 import { parseDocument } from "yaml";
 
@@ -35,7 +32,7 @@ const doc = parseDocument(file);
 const remoteUrl  = doc.getIn(['reqConfig','remoteUrl']) as string;
 
 @ReqComponent({
-    baseURL: remoteUrl
+    baseURL: 'http://localhost:3000'
 })
 class Clazz {
     @Get('/user/queryReward')
@@ -44,18 +41,21 @@ class Clazz {
     }
     @Get('/mission/getDayMissions')
     // @ReqAop({beforeCb: testBefore})
-    async getDayMissions(@Data data?:any,@Params params?:Record<string, any>): ReqReturnType<IData<any>> {
+    async getDayMissions(@Body data?:any,@Query params?:Record<string, any>): ReqReturnType<IData<any>> {
     }
-    @Post('/cityjson?ie=utf-8')
-    async getIp(@Data data?:any):ReqReturnType<any>{
+    @Post('/app/post')
+    async getIp(@Body data?:any):ReqReturnType<any>{
 
     }
 }
 const C = new Clazz()
 const params = {date:'2023-12-26'}
 const data = {date:'2024-01-01'}
-C.getDayMissions(data,params).then((res) => {
-    console.log(res);
+// C.getDayMissions(data,params).then((res) => {
+//     console.log(res);
+// })
+C.getIp(data).then(res=>{
+    console.log(res)
 })
 
 

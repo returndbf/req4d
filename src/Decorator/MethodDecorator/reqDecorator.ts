@@ -2,10 +2,10 @@ import {getMetaData, paramsObjToStr} from "../../util";
 import {
     AFTER_AOP,
     BEFORE_AOP,
-    DATA,
-    DATA_INDEX,
-    PARAMS,
-    PARAMS_INDEX, REQ_METHOD, ReqMethodEnum,
+    BODY,
+    BODY_INDEX,
+    QUERY,
+    QUERY_INDEX, REQ_METHOD, ReqMethodEnum,
     USE_AFTER_AOP,
     USE_BEFORE_AOP
 } from "../../constant";
@@ -17,10 +17,10 @@ export const Get = (url: string): MethodDecorator => {
     return (target: Object, propertyKey: string | symbol, descriptor: PropertyDescriptor) => {
         const originalMethod = descriptor.value;
         descriptor.value = async (...args:any[]) => {
-            const paramsIndex = getMetaData(PARAMS_INDEX,target,propertyKey)
+            const paramsIndex = getMetaData(QUERY_INDEX,target,propertyKey)
             console.log(paramsIndex,"paramsindex")
             const params = args[paramsIndex]
-            Reflect.defineMetadata(PARAMS,params,target,propertyKey)
+            Reflect.defineMetadata(QUERY,params,target,propertyKey)
             Reflect.defineMetadata(REQ_METHOD,ReqMethodEnum.GET,target,propertyKey)
             if(getMetaData(USE_BEFORE_AOP,target,propertyKey) || getMetaData(USE_AFTER_AOP,target,propertyKey)){
                 return await aopRunWithReq(url,target,propertyKey)
@@ -34,9 +34,9 @@ export const Get = (url: string): MethodDecorator => {
 export const Post =(url:string) :MethodDecorator=>{
     return (target, propertyKey, descriptor:PropertyDescriptor)=>{
         descriptor.value = async (...args:any[])=>{
-            const dataIndex =  getMetaData(DATA_INDEX,target,propertyKey)
+            const dataIndex =  getMetaData(BODY_INDEX,target,propertyKey)
             const data  = args[dataIndex]
-            Reflect.defineMetadata(DATA,data,target,propertyKey)
+            Reflect.defineMetadata(BODY,data,target,propertyKey)
             Reflect.defineMetadata(REQ_METHOD,ReqMethodEnum.POST,target,propertyKey)
             if(getMetaData(USE_BEFORE_AOP,target,propertyKey) || getMetaData(USE_AFTER_AOP,target,propertyKey)){
                 return await aopRunWithReq(url,target,propertyKey)

@@ -1,8 +1,8 @@
 import {
     AFTER_AOP, AXIOS_INSTANCE,
     BEFORE_AOP,
-    DATA,
-    PARAMS,
+    BODY,
+    QUERY,
     REQ_METHOD,
     ReqMethodEnum,
     USE_AFTER_AOP,
@@ -57,9 +57,9 @@ export const aopRunWithReq = async (url: string, target: Object, propertyKey: st
     }
     beforeCb && beforeCb()
     // 获取参数装饰器装饰器的params参数
-    const params = getMetaData(PARAMS, target, propertyKey);
+    const params = getMetaData(QUERY, target, propertyKey);
     // 获取参数装饰器装饰器的data参数
-    const data = getMetaData(DATA, target, propertyKey)
+    const data = getMetaData(BODY, target, propertyKey)
     const reqMethod: ReqMethodEnum = getMetaData(REQ_METHOD, target, propertyKey);
     // 获取reqComponent方法装饰器的axiosInstance
     const axiosInstance: AxiosInstance = getMetaData(AXIOS_INSTANCE, target)
@@ -81,8 +81,8 @@ export const aopRunWithReq = async (url: string, target: Object, propertyKey: st
 // }
 
 export const runReq = async (url: string, target: Object, propertyKey: string | symbol) => {
-    const params = getMetaData(PARAMS, target, propertyKey);
-    const data = getMetaData(DATA, target, propertyKey)
+    const params = getMetaData(QUERY, target, propertyKey);
+    const data = getMetaData(BODY, target, propertyKey)
     const reqMethod: ReqMethodEnum = getMetaData(REQ_METHOD, target, propertyKey);
     // 获取reqComponent方法装饰器的axiosInstance
     const axiosInstance: AxiosInstance = getMetaData(AXIOS_INSTANCE, target)

@@ -1,7 +1,7 @@
 import "reflect-metadata"
 
 import {ReqReturnType} from "../@types/ReqType";
-import {Get, Post} from "../Decorator/MethodDecorator/reqDecorator";
+import {Get, Post, Upload} from "../Decorator/MethodDecorator/reqDecorator";
 import {Body, Query} from "../Decorator/ArgumentDecorator/reqParams"
 import {BaseUrl, ReqComponent} from "../Decorator/ClassDecorator";
 import fs from "fs";
@@ -47,6 +47,10 @@ class Clazz {
     async getIp(@Body data?:any):ReqReturnType<any>{
 
     }
+    @Upload('/app/upload')
+    async upload():ReqReturnType<any>{
+
+    }
 }
 const C = new Clazz()
 const params = {date:'2023-12-26'}
@@ -54,11 +58,13 @@ const data = {date:'2024-01-01'}
 // C.getDayMissions(data,params).then((res) => {
 //     console.log(res);
 // })
-C.getIp(data).then(res=>{
-    console.log(res)
-})
-
-
+// C.getIp(data).then(res=>{
+//     console.log(res)
+// })
+// C.upload().then(res=>{
+//     console.log(res)
+// })
+console.log(typeof window)
 
 
 

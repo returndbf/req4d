@@ -12,6 +12,8 @@ const BODY = 'body'
 
 const REQ_METHOD = 'reqMethod'
 
+const EXTRA_CONFIG = 'extraConfig'
+
 enum ReqMethodEnum {
     GET = 'get',
     POST = 'post',
@@ -31,6 +33,7 @@ export {
     BODY_INDEX,
     BODY,
     REQ_METHOD,
-    ReqMethodEnum
+    ReqMethodEnum,
+    EXTRA_CONFIG
 }
 

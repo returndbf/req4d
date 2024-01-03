@@ -1,7 +1,7 @@
 import {
     AFTER_AOP, AXIOS_INSTANCE,
     BEFORE_AOP,
-    BODY,
+    BODY, EXTRA_CONFIG,
     QUERY,
     REQ_METHOD,
     ReqMethodEnum,
@@ -10,22 +10,22 @@ import {
 } from "../../constant";
 import {GetConfig, LoginFnParams, ReqAopType, ReqReturnType} from "../../@types/ReqType";
 import {getMetaData} from "../../util";
-import axios, {Axios} from "axios";
+import axios, {Axios, AxiosRequestConfig} from "axios";
 import {AxiosInstance} from "axios/index";
 
-const getReqMap = (axiosInstance: AxiosInstance, url: string, params?: any, data?: any) => {
+const getReqMap = (axiosInstance: AxiosInstance, url: string, params?: any, data?: any,extraConfig?:AxiosRequestConfig) => {
     return {
         get: async () => {
-            return axiosInstance.get(url, {params})
+            return axiosInstance.get(url, {params,...extraConfig})
         },
         post: async () => {
-            return axiosInstance.post(url, data, {params})
+            return axiosInstance.post(url, data, {params,...extraConfig})
         },
         put: async () => {
-            return axiosInstance.post(url, data, {params})
+            return axiosInstance.post(url, data, {params,...extraConfig})
         },
         delete: async () => {
-            return axiosInstance.post(url, data, {params})
+            return axiosInstance.post(url, data, {params,...extraConfig})
         }
     }
 }
@@ -83,10 +83,12 @@ export const aopRunWithReq = async (url: string, target: Object, propertyKey: st
 export const runReq = async (url: string, target: Object, propertyKey: string | symbol) => {
     const params = getMetaData(QUERY, target, propertyKey);
     const data = getMetaData(BODY, target, propertyKey)
+    const extraConfig  = getMetaData(EXTRA_CONFIG, target, propertyKey)
     const reqMethod: ReqMethodEnum = getMetaData(REQ_METHOD, target, propertyKey);
     // 获取reqComponent方法装饰器的axiosInstance
     const axiosInstance: AxiosInstance = getMetaData(AXIOS_INSTANCE, target)
-    const reqObj = getReqMap(axiosInstance, url, params, data)
+    const reqObj = getReqMap(axiosInstance, url, params, data,extraConfig)
+    console.log(reqObj,'reqobj')
     const response = await reqObj[reqMethod]()
     return response.data
 }

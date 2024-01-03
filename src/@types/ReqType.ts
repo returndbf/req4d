@@ -1,4 +1,4 @@
-import {IData} from "../index";
+
 
 export enum ReqType {
     GET = "GET",

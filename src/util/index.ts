@@ -1,4 +1,5 @@
 import {GetConfig} from "../@types/ReqType";
+import {env} from "../@types/Config";
 
 export const getMetaData = (key:string,target:Object,propertyKey?:string|symbol)=>{
     if(propertyKey){
@@ -23,4 +24,11 @@ export const paramsObjToStr = (params:GetConfig['params'])=>{
 
 const runMainFnWith = ()=>{
 
+}
+export const currentEnv=():env=>{
+    if(typeof window === 'undefined'){
+        return 'node'
+    }else{
+        return 'browser'
+    }
 }

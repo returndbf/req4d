@@ -20,6 +20,7 @@ enum ReqMethodEnum {
     PUT = 'put',
     DELETE = 'delete',
 }
+const FILE_INDEX = 'fileIndex'
 
 
 export {
@@ -34,6 +35,7 @@ export {
     BODY,
     REQ_METHOD,
     ReqMethodEnum,
-    EXTRA_CONFIG
+    EXTRA_CONFIG,
+    FILE_INDEX
 }
 

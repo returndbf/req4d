@@ -1,3 +1,4 @@
+import {ReadStream} from "fs";
 
 
 export enum ReqType {
@@ -26,3 +27,6 @@ export interface ReqAopType{
     beforeCb?:Function
     afterCb?:Function
 }
+
+export type FileType = {key:string,value:File|ReadStream|Buffer }
+export type FilesType = FileType|FileType[]

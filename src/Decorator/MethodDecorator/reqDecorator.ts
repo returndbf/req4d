@@ -3,14 +3,14 @@ import {
     AFTER_AOP,
     BEFORE_AOP,
     BODY,
-    BODY_INDEX, EXTRA_CONFIG,
+    BODY_INDEX, EXTRA_CONFIG, FILE_INDEX,
     QUERY,
     QUERY_INDEX, REQ_METHOD, ReqMethodEnum,
     USE_AFTER_AOP,
     USE_BEFORE_AOP
 } from "../../constant";
 import axios from "axios";
-import {GetConfig, LoginFnParams} from "../../@types/ReqType";
+import {FilesType, FileType, GetConfig, LoginFnParams} from "../../@types/ReqType";
 import {aopRunWithReq, runReq} from "./Aop";
 import * as path from "path";
 const FormData = require('form-data');
@@ -52,14 +52,23 @@ export const Post =(url:string) :MethodDecorator=>{
 export const Upload =(url:string): MethodDecorator=>{
     return (target, propertyKey, descriptor:PropertyDescriptor)=>{
         descriptor.value = async (...args:any[])=>{
+            const fileIndex= getMetaData(FILE_INDEX, target, propertyKey)
+            const files : FilesType =   args[fileIndex]
             const formData = new FormData();
+            if(Array.isArray(files)){
+                files.forEach((file:FileType)=>{
+                    formData.append(file.key,file.value)
+                })
 
-            const filePath = path.join(__dirname, 'pic.png');
+            }else{
+                formData.append(files.key,files.value)
+            }
+            // const filePath = path.join(__dirname, 'pic.png');
             // 添加要上传的文件，假设filePath是本地文件路径
-            formData.append('file', fs.createReadStream(filePath), { filename: 'example.jpg' }); // 假设文件名为example.jpg
+            // formData.append('file', fs.createReadStream(filePath), { filename: 'example.jpg' }); // 假设文件名为example.jpg
 
             // 如果有其他字段需要一并发送，可以添加
-            formData.append('metadata', JSON.stringify({ key: 'value' }));
+            // formData.append('metadata', JSON.stringify({ key: 'value' }));
 
             // 设置请求头（FormData会自动生成正确的Content-Type）
             const config = {

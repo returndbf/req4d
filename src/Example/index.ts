@@ -1,11 +1,12 @@
 import "reflect-metadata"
 
-import {ReqReturnType} from "../@types/ReqType";
+import {FilesType, ReqReturnType} from "../@types/ReqType";
 import {Get, Post, Upload} from "../Decorator/MethodDecorator/reqDecorator";
-import {Body, Query} from "../Decorator/ArgumentDecorator/reqParams"
+import {Body, File, Query} from "../Decorator/ArgumentDecorator/reqParams"
 import {BaseUrl, ReqComponent} from "../Decorator/ClassDecorator";
 import fs from "fs";
 import { parseDocument } from "yaml";
+import * as path from "path";
 
 
 // const testAfter = (responseData: any) => {
@@ -48,7 +49,7 @@ class Clazz {
 
     }
     @Upload('/app/upload')
-    async upload():ReqReturnType<any>{
+    async upload(@File files:FilesType):ReqReturnType<any>{
 
     }
 }
@@ -64,7 +65,15 @@ const data = {date:'2024-01-01'}
 // C.upload().then(res=>{
 //     console.log(res)
 // })
-console.log(typeof window)
+const filePath = path.join(__dirname, 'pic.png');
+const files = {
+    key: 'file1',
+    value: fs.readFileSync(filePath),
+};
+C.upload(files).then(res=>{
+    console.log(res)
+})
+
 
 
 

@@ -1,13 +1,14 @@
 import "reflect-metadata"
 
-import {FilesType, ReqReturnType} from "../@types/ReqType";
-import {Get, Post, Upload} from "../Decorator/MethodDecorator/reqDecorator";
+import {FilesType, FileType, ReqReturnType} from "../@types/ReqType";
+import {Download, Get, Post, Upload} from "../Decorator/MethodDecorator/reqDecorator";
 import {Body, File, Query} from "../Decorator/ArgumentDecorator/reqParams"
 import {BaseUrl, ReqComponent} from "../Decorator/ClassDecorator";
-import fs from "fs";
+import fs, {ReadStream} from "fs";
 import { parseDocument } from "yaml";
 import * as path from "path";
-
+import axios from "axios";
+const FormData = require('form-data');
 
 // const testAfter = (responseData: any) => {
 //     console.log(responseData.data[0].mission_name)
@@ -33,7 +34,7 @@ const doc = parseDocument(file);
 const remoteUrl  = doc.getIn(['reqConfig','remoteUrl']) as string;
 
 @ReqComponent({
-    baseURL: 'http://localhost:3000'
+    baseURL: 'http://127.0.0.1:5173'
 })
 class Clazz {
     @Get('/user/queryReward')
@@ -49,7 +50,11 @@ class Clazz {
 
     }
     @Upload('/app/upload')
-    async upload(@File files:FilesType):ReqReturnType<any>{
+    async upload(@File files: FileType,@Body data?:any):ReqReturnType<any>{
+
+    }
+    @Download('/api/categoryDict/download')
+    async download(@Body data?:any):ReqReturnType<any>{
 
     }
 }
@@ -66,15 +71,17 @@ const data = {date:'2024-01-01'}
 //     console.log(res)
 // })
 const filePath = path.join(__dirname, 'pic.png');
+const value = fs.createReadStream(filePath)
 const files = {
     key: 'file1',
-    value: fs.readFileSync(filePath),
+    value
 };
-C.upload(files).then(res=>{
-    console.log(res)
-})
 
+// C.upload(files,data).then(res=>{
+//     console.log(res)
+// })
 
+C.download()
 
 
 

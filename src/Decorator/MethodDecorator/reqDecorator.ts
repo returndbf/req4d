@@ -13,71 +13,101 @@ import axios from "axios";
 import {FilesType, FileType, GetConfig, LoginFnParams} from "../../@types/ReqType";
 import {aopRunWithReq, runReq} from "./Aop";
 import * as path from "path";
+
 const FormData = require('form-data');
 const fs = require('fs')
 
 export const Get = (url: string): MethodDecorator => {
     return (target: Object, propertyKey: string | symbol, descriptor: PropertyDescriptor) => {
         const originalMethod = descriptor.value;
-        descriptor.value = async (...args:any[]) => {
-            const paramsIndex = getMetaData(QUERY_INDEX,target,propertyKey)
-            console.log(paramsIndex,"paramsindex")
+        descriptor.value = async (...args: any[]) => {
+            const paramsIndex = getMetaData(QUERY_INDEX, target, propertyKey)
             const params = args[paramsIndex]
-            Reflect.defineMetadata(QUERY,params,target,propertyKey)
-            Reflect.defineMetadata(REQ_METHOD,ReqMethodEnum.GET,target,propertyKey)
-            if(getMetaData(USE_BEFORE_AOP,target,propertyKey) || getMetaData(USE_AFTER_AOP,target,propertyKey)){
-                return await aopRunWithReq(url,target,propertyKey)
-            }else{
-                return await runReq(url,target,propertyKey)
+            Reflect.defineMetadata(QUERY, params, target, propertyKey)
+            Reflect.defineMetadata(REQ_METHOD, ReqMethodEnum.GET, target, propertyKey)
+            if (getMetaData(USE_BEFORE_AOP, target, propertyKey) || getMetaData(USE_AFTER_AOP, target, propertyKey)) {
+                return await aopRunWithReq(url, target, propertyKey)
+            } else {
+                return await runReq(url, target, propertyKey)
             }
 
         }
     }
 }
-export const Post =(url:string) :MethodDecorator=>{
-    return (target, propertyKey, descriptor:PropertyDescriptor)=>{
-        descriptor.value = async (...args:any[])=>{
-            const dataIndex =  getMetaData(BODY_INDEX,target,propertyKey)
-            const data  = args[dataIndex]
-            Reflect.defineMetadata(BODY,data,target,propertyKey)
-            Reflect.defineMetadata(REQ_METHOD,ReqMethodEnum.POST,target,propertyKey)
-            if(getMetaData(USE_BEFORE_AOP,target,propertyKey) || getMetaData(USE_AFTER_AOP,target,propertyKey)){
-                return await aopRunWithReq(url,target,propertyKey)
-            }else{
-                return await runReq(url,target,propertyKey)
+export const Post = (url: string): MethodDecorator => {
+    return (target, propertyKey, descriptor: PropertyDescriptor) => {
+        descriptor.value = async (...args: any[]) => {
+            // const paramsIndex = getMetaData(QUERY_INDEX, target, propertyKey)
+            // const params = args[paramsIndex]
+            const dataIndex = getMetaData(BODY_INDEX, target, propertyKey)
+            const data = args[dataIndex]
+            Reflect.defineMetadata(BODY, data, target, propertyKey)
+            //Reflect.defineMetadata(QUERY, params, target, propertyKey)
+            Reflect.defineMetadata(REQ_METHOD, ReqMethodEnum.POST, target, propertyKey)
+            if (getMetaData(USE_BEFORE_AOP, target, propertyKey) || getMetaData(USE_AFTER_AOP, target, propertyKey)) {
+                return await aopRunWithReq(url, target, propertyKey)
+            } else {
+                return await runReq(url, target, propertyKey)
             }
         }
     }
 }
-export const Upload =(url:string): MethodDecorator=>{
-    return (target, propertyKey, descriptor:PropertyDescriptor)=>{
-        descriptor.value = async (...args:any[])=>{
-            const fileIndex= getMetaData(FILE_INDEX, target, propertyKey)
-            const files : FilesType =   args[fileIndex]
+export const Upload = (url: string): MethodDecorator => {
+    return (target, propertyKey, descriptor: PropertyDescriptor) => {
+        descriptor.value = async (...args: any[]) => {
+            const fileIndex = getMetaData(FILE_INDEX, target, propertyKey)
+            const bodyIndex = getMetaData(BODY_INDEX, target, propertyKey)
+            const files: FilesType = args[fileIndex]
             const formData = new FormData();
-            if(Array.isArray(files)){
-                files.forEach((file:FileType)=>{
-                    formData.append(file.key,file.value)
+            if (Array.isArray(files)) {
+                files.forEach((file: FileType) => {
+                    formData.append(file.key, file.value)
                 })
-
-            }else{
-                formData.append(files.key,files.value)
+            } else {
+                formData.append(files.key, files.value)
             }
-            // const filePath = path.join(__dirname, 'pic.png');
-            // 添加要上传的文件，假设filePath是本地文件路径
-            // formData.append('file', fs.createReadStream(filePath), { filename: 'example.jpg' }); // 假设文件名为example.jpg
-
-            // 如果有其他字段需要一并发送，可以添加
-            // formData.append('metadata', JSON.stringify({ key: 'value' }));
-
-            // 设置请求头（FormData会自动生成正确的Content-Type）
+            if(bodyIndex&&args[bodyIndex]){
+                Object.entries(args[bodyIndex]).forEach(([key, value]) => {
+                    formData.append(key, value)
+                })
+            }
             const config = {
                 headers: formData.getHeaders(),
             };
-            Reflect.defineMetadata(BODY,formData,target,propertyKey)
-            Reflect.defineMetadata(REQ_METHOD,ReqMethodEnum.POST,target,propertyKey)
-            Reflect.defineMetadata(EXTRA_CONFIG,config,target,propertyKey)
-            return await runReq(url,target,propertyKey)
+            Reflect.defineMetadata(BODY, formData, target, propertyKey)
+            Reflect.defineMetadata(REQ_METHOD, ReqMethodEnum.POST, target, propertyKey)
+            Reflect.defineMetadata(EXTRA_CONFIG, config, target, propertyKey)
+            return await runReq(url, target, propertyKey)
+        }
+    }
+}
+export const Download = (url:string):MethodDecorator=>{
+    return (target, propertyKey, descriptor: PropertyDescriptor) => {
+        descriptor.value = async (...args: any[]) => {
+            const config = {
+                responseType: 'stream',
+                headers: {
+                    Auth:'eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MDQ4NzI4NDIsImlkIjoiMSIsImV4cCI6MTcwNDg3NjQ0Mn0.zdy_2PqgVz694qa4dGG_9pspG6WqC-WlhlaYsHRR-8w'
+                }
+            };
+            Reflect.defineMetadata(REQ_METHOD, ReqMethodEnum.GET, target, propertyKey)
+            Reflect.defineMetadata(EXTRA_CONFIG, config, target, propertyKey)
+            const data = await runReq(url,target,propertyKey)
+            const writeStream = fs.createWriteStream('./file.xlsx');
+            data.pipe(writeStream);
+            writeStream.on('finish', () => {
+                console.log('文件下载并保存成功');
+            });
+            writeStream.on('error', (err:any) => {
+                console.error('文件写入失败:', err);
+                // 清理操作：删除未完整写入的文件（异步版本）
+                fs.unlink('./file.xlsx')
+                    .catch((unlinkError:any) => console.error('删除失败的文件时出错:', unlinkError));
+            });
+                // data.data.pipe(fs.createWriteStream('./file.xlsx')) // 保存到项目根目录下的file.txt文件
+                // .on('finish', () => {
+                //     console.log('文件下载完成并保存到根目录');
+                // })
 
         }
     }

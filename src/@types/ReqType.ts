@@ -28,5 +28,5 @@ export interface ReqAopType{
     afterCb?:Function
 }
 
-export type FileType = {key:string,value:File|ReadStream|Buffer }
+export type FileType = {key:string,value:File|ReadStream }
 export type FilesType = FileType|FileType[]

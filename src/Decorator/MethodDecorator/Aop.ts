@@ -88,7 +88,6 @@ export const runReq = async (url: string, target: Object, propertyKey: string | 
     // 获取reqComponent方法装饰器的axiosInstance
     const axiosInstance: AxiosInstance = getMetaData(AXIOS_INSTANCE, target)
     const reqObj = getReqMap(axiosInstance, url, params, data,extraConfig)
-    console.log(reqObj,'reqobj')
     const response = await reqObj[reqMethod]()
     return response.data
 }

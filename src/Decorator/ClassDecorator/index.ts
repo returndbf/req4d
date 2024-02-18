@@ -1,5 +1,6 @@
 import type {CreateAxiosDefaults} from "axios/index.d.ts";
 import axios from "axios";
+import {EXTRA_CONFIG} from "../../constant";
 
 export const BaseUrl = (baseUrl: string): ClassDecorator => {
     return (target) => {
@@ -14,3 +15,4 @@ export const ReqComponent = (config?:ComponentConfig): ClassDecorator => {
         Reflect.defineMetadata('axiosInstance',axiosInstance,target.prototype)
     }
 }
+

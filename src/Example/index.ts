@@ -1,14 +1,15 @@
 import "reflect-metadata"
 
 import {FilesType, FileType, ReqReturnType} from "../@types/ReqType";
-import {Download, Get, Post, Upload} from "../Decorator/MethodDecorator/reqDecorator";
-import {Body, File, Query} from "../Decorator/ArgumentDecorator/reqParams"
+import {Config, Get, Post, Upload} from "../Decorator/MethodDecorator/reqDecorator";
+import {Body, File, Param, Query} from "../Decorator/ArgumentDecorator/reqParams"
 import {BaseUrl, ReqComponent} from "../Decorator/ClassDecorator";
 import fs, {ReadStream} from "fs";
 import { parseDocument } from "yaml";
 import * as path from "path";
 import axios from "axios";
 const FormData = require('form-data');
+
 
 // const testAfter = (responseData: any) => {
 //     console.log(responseData.data[0].mission_name)
@@ -53,14 +54,24 @@ class Clazz {
     async upload(@File files: FileType,@Body data?:any):ReqReturnType<any>{
 
     }
-    @Download('/api/categoryDict/download')
+    @Get('/api/categoryDict/download')
+    @Config({
+                responseType: 'stream',
+                headers: {
+                    Auth:'eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MDQ4NzI4NDIsImlkIjoiMSIsImV4cCI6MTcwNDg3NjQ0Mn0.zdy_2PqgVz694qa4dGG_9pspG6WqC-WlhlaYsHRR-8w'
+                }
+            })
     async download(@Body data?:any):ReqReturnType<any>{
+
+    }
+    // @Get('/api/query/:id')
+    async paramGet(@Param('id') id: string){
 
     }
 }
 const C = new Clazz()
-const params = {date:'2023-12-26'}
-const data = {date:'2024-01-01'}
+// const params = {date:'2023-12-26'}
+// const data = {date:'2024-01-01'}
 // C.getDayMissions(data,params).then((res) => {
 //     console.log(res);
 // })
@@ -70,18 +81,19 @@ const data = {date:'2024-01-01'}
 // C.upload().then(res=>{
 //     console.log(res)
 // })
-const filePath = path.join(__dirname, 'pic.png');
-const value = fs.createReadStream(filePath)
-const files = {
-    key: 'file1',
-    value
-};
+// const filePath = path.join(__dirname, 'pic.png');
+// const value = fs.createReadStream(filePath)
+// const files = {
+//     key: 'file1',
+//     value
+// };
 
 // C.upload(files,data).then(res=>{
 //     console.log(res)
 // })
-
-C.download()
+//
+// C.download()
+C.paramGet('123')
 
 
 

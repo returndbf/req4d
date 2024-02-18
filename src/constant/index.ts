@@ -22,6 +22,8 @@ enum ReqMethodEnum {
 }
 const FILE_INDEX = 'fileIndex'
 
+const PARAM_INDEX = 'paramIndex'
+const PARAM_PROPERTY = 'paramProperty'
 
 export {
     AXIOS_INSTANCE,
@@ -36,6 +38,8 @@ export {
     REQ_METHOD,
     ReqMethodEnum,
     EXTRA_CONFIG,
-    FILE_INDEX
+    FILE_INDEX,
+    PARAM_INDEX,
+    PARAM_PROPERTY
 }
 

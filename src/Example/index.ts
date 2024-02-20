@@ -64,8 +64,8 @@ class Clazz {
     async download(@Body data?:any):ReqReturnType<any>{
 
     }
-    // @Get('/api/query/:id')
-    async paramGet(@Param('id') id: string){
+    @Get('/api/query/:id/:name')
+    async paramGet(@Param('id') id: string,@Param('name') name: string){
 
     }
 }
@@ -93,7 +93,7 @@ const C = new Clazz()
 // })
 //
 // C.download()
-C.paramGet('123')
+C.paramGet('123',"name")
 
 
 

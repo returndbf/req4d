@@ -3,7 +3,7 @@ import {
     AFTER_AOP,
     BEFORE_AOP,
     BODY,
-    BODY_INDEX, EXTRA_CONFIG, FILE_INDEX,
+    BODY_INDEX, EXTRA_CONFIG, FILE_INDEX, PARAM_INDEX, PARAM_PROPERTY,
     QUERY,
     QUERY_INDEX, REQ_METHOD, ReqMethodEnum,
     USE_AFTER_AOP,
@@ -14,6 +14,7 @@ import {FilesType, FileType, GetConfig, LoginFnParams} from "../../@types/ReqTyp
 import {aopRunWithReq, runReq} from "./Aop";
 import * as path from "path";
 import {AxiosRequestConfig} from "axios/index";
+import {parseParam, replaceUrl} from "./helper";
 
 const FormData = require('form-data');
 const fs = require('fs')
@@ -25,28 +26,15 @@ export const Config = (config:AxiosRequestConfig) : MethodDecorator => {
 }
 
 
-const parseParam = (url:string)=>{
-    const regex = /:(\w+)/g;
-    const matches = [];
-    let match;
 
-    while ((match = regex.exec(url)) !== null) {
-        matches.push(match[1]);
-    }
-
-    return matches;
-}
 export const Get = (url: string): MethodDecorator => {
     return (target: Object, propertyKey: string | symbol, descriptor: PropertyDescriptor) => {
         const originalMethod = descriptor.value;
         descriptor.value = async (...args: any[]) => {
             // 解析获取param数组
             const params = parseParam(url)
-            // 如果有数据，则根据args获取param的数据，然后替换url占位符数据
-            if(params.length){
-
-            }
-
+           //  替换url中param
+           url = replaceUrl(url,params,args,target,propertyKey)
             const queryIndex = getMetaData(QUERY_INDEX, target, propertyKey)
             const query = args[queryIndex]
             Reflect.defineMetadata(QUERY, query, target, propertyKey)

@@ -32,10 +32,11 @@ interface IResType {
 
 const file = fs.readFileSync("../extra.yml", "utf8");
 const doc = parseDocument(file);
+//  获取yml配置
 const remoteUrl  = doc.getIn(['reqConfig','remoteUrl']) as string;
 
 @ReqComponent({
-    baseURL: 'http://127.0.0.1:5173'
+    baseURL: 'http://192.168.3.96:3000'
 })
 class Clazz {
     @Get('/user/queryReward')
@@ -64,8 +65,12 @@ class Clazz {
     async download(@Body data?:any):ReqReturnType<any>{
 
     }
-    @Get('/api/query/:id/:name')
-    async paramGet(@Param('id') id: string,@Param('name') name: string){
+    @Get('/app/param/:id/:name')
+    async paramGet(@Param('id') id: string,@Param('name') name: string):ReqReturnType<string>{
+
+    }
+    @Get('/get')
+    async hello():ReqReturnType<string>{
 
     }
 }
@@ -93,7 +98,13 @@ const C = new Clazz()
 // })
 //
 // C.download()
-C.paramGet('123',"name")
+C.paramGet('id',"name").then(res=>{
+        console.log(res)
+})
+
+// C.getReward().then(res=>{
+//     console.log(res)
+// })
 
 
 

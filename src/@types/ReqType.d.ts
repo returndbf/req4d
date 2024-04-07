@@ -14,7 +14,7 @@ export interface GetConfig {
     params?:Record<string, string|number > | string
 }
 
-export type ReqReturnType<T> = Promise<T & void>
+export type ReqReturnType<T> = Promise<T | void>
 
 export interface LoginFnParams{
     data?:Record<string, string|number >

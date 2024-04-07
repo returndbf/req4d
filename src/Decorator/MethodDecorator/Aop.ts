@@ -89,5 +89,5 @@ export const runReq = async (url: string, target: Object, propertyKey: string | 
     const axiosInstance: AxiosInstance = getMetaData(AXIOS_INSTANCE, target)
     const reqObj = getReqMap(axiosInstance, url, params, data,extraConfig)
     const response = await reqObj[reqMethod]()
-    return response.data
+    return response?.data
 }

@@ -16,7 +16,7 @@ export const File = (target: any, propertyKey: string, index: number) =>{
 export const Param = (property:string):ParameterDecorator =>{
     return (target, propertyKey, index) =>{
         // Reflect.defineMetadata(PARAM_INDEX,index,target,propertyKey)
-        console.log(property,'property')
+        // console.log(property,'property')
         // 存储参数名
         Reflect.defineMetadata(PARAM_PROPERTY+property,property,target,propertyKey!)
         // 存储参数下标

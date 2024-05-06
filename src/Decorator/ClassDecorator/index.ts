@@ -1,7 +1,7 @@
 import type {CreateAxiosDefaults} from "axios/index.d.ts";
 import axios from "axios";
 import {AXIOS_INSTANCE, EXTRA_CONFIG} from "../../constant";
-
+import 'reflect-metadata'
 export const BaseUrl = (baseUrl: string): ClassDecorator => {
     return (target) => {
         Reflect.defineMetadata('baseUrl', baseUrl, target.prototype)

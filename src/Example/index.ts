@@ -36,7 +36,7 @@ const doc = parseDocument(file);
 const remoteUrl  = doc.getIn(['reqConfig','remoteUrl']) as string;
 
 @ReqComponent({
-    baseURL: 'http://192.168.3.96:3000'
+    baseURL: remoteUrl
 })
 class Clazz {
     @Get('/user/queryReward')
@@ -48,11 +48,11 @@ class Clazz {
     async getDayMissions(@Body data?:any,@Query params?:Record<string, any>): ReqReturnType<IData<any>> {
     }
     @Post('/app/post')
-    async getIp(@Body data?:any):ReqReturnType<any>{
+    async post(@Body data?:any):ReqReturnType<any>{
 
     }
     @Upload('/app/upload')
-    async upload(@File files: FileType,@Body data?:any):ReqReturnType<any>{
+    async upload(@File files: FilesType,@Body data?:any):ReqReturnType<any>{
 
     }
     @Get('/api/categoryDict/download')
@@ -74,37 +74,9 @@ class Clazz {
 
     }
 }
-const C = new Clazz()
-// const params = {date:'2023-12-26'}
-// const data = {date:'2024-01-01'}
-// C.getDayMissions(data,params).then((res) => {
-//     console.log(res);
-// })
-// C.getIp(data).then(res=>{
-//     console.log(res)
-// })
-// C.upload().then(res=>{
-//     console.log(res)
-// })
-// const filePath = path.join(__dirname, 'pic.png');
-// const value = fs.createReadStream(filePath)
-// const files = {
-//     key: 'file1',
-//     value
-// };
 
-// C.upload(files,data).then(res=>{
-//     console.log(res)
-// })
-//
-// C.download()
-C.paramGet('id',"name").then(res=>{
-        console.log(res)
-})
 
-// C.getReward().then(res=>{
-//     console.log(res)
-// })
+
 
 
 

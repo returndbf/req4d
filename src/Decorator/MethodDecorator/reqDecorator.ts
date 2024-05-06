@@ -13,11 +13,12 @@ import axios from "axios";
 import {FilesType, FileType, GetConfig, LoginFnParams} from "../../@types/ReqType";
 import {aopRunWithReq, runReq} from "./Aop";
 import * as path from "path";
-import {AxiosRequestConfig} from "axios/index";
+import {AxiosRequestConfig} from "axios";
 import {parseParam, replaceUrl} from "./helper";
+import 'reflect-metadata'
 
 const FormData = require('form-data');
-const fs = require('fs')
+
 
 export const Config = (config:AxiosRequestConfig) : MethodDecorator => {
     return (target: Object, propertyKey: string | symbol, descriptor: PropertyDescriptor) => {
@@ -53,9 +54,9 @@ export const Post = (url: string): MethodDecorator => {
         descriptor.value = async (...args: any[]) => {
             const queryIndex = getMetaData(QUERY_INDEX, target, propertyKey)
             const query = args[queryIndex]
-            const dataIndex = getMetaData(BODY_INDEX, target, propertyKey)
-            const data = args[dataIndex]
-            Reflect.defineMetadata(BODY, data, target, propertyKey)
+            const bodyIndex = getMetaData(BODY_INDEX, target, propertyKey)
+            const body = args[bodyIndex]
+            Reflect.defineMetadata(BODY, body, target, propertyKey)
             Reflect.defineMetadata(QUERY, query, target, propertyKey)
             Reflect.defineMetadata(REQ_METHOD, ReqMethodEnum.POST, target, propertyKey)
             if (getMetaData(USE_BEFORE_AOP, target, propertyKey) || getMetaData(USE_AFTER_AOP, target, propertyKey)) {
@@ -66,38 +67,25 @@ export const Post = (url: string): MethodDecorator => {
         }
     }
 }
-export const Put = (url: string): MethodDecorator => {
-    return (target, propertyKey, descriptor: PropertyDescriptor) => {
-        descriptor.value = async (...args: any[]) => {
-            const paramsIndex = getMetaData(QUERY_INDEX, target, propertyKey)
-            const params = args[paramsIndex]
-            const dataIndex = getMetaData(BODY_INDEX, target, propertyKey)
-            const data = args[dataIndex]
-            Reflect.defineMetadata(BODY, data, target, propertyKey)
-            Reflect.defineMetadata(QUERY, params, target, propertyKey)
-            Reflect.defineMetadata(REQ_METHOD, ReqMethodEnum.PUT, target, propertyKey)
-            if (getMetaData(USE_BEFORE_AOP, target, propertyKey) || getMetaData(USE_AFTER_AOP, target, propertyKey)) {
-                return await aopRunWithReq(url, target, propertyKey)
-            } else {
-                return await runReq(url, target, propertyKey)
-            }
-        }
-    }
-}
+export const Put = Post
 export const Upload = (url: string): MethodDecorator => {
     return (target, propertyKey, descriptor: PropertyDescriptor) => {
         descriptor.value = async (...args: any[]) => {
             const fileIndex = getMetaData(FILE_INDEX, target, propertyKey)
             const bodyIndex = getMetaData(BODY_INDEX, target, propertyKey)
             const files: FilesType = args[fileIndex]
+            console.log(files,"files")
+
             const formData = new FormData();
             if (Array.isArray(files)) {
                 files.forEach((file: FileType) => {
                     formData.append(file.key, file.value)
                 })
             } else {
-                formData.append(files.key, files.value)
+                formData.append(files!.key, files!.value)
             }
+            console.log(files,"files")
+            //return
             if(bodyIndex&&args[bodyIndex]){
                 Object.entries(args[bodyIndex]).forEach(([key, value]) => {
                     formData.append(key, value)
@@ -161,8 +149,8 @@ export const Upload = (url: string): MethodDecorator => {
 // }
 
 
-const Login = (loginData: LoginFnParams): MethodDecorator => {
-    return (target, propertyKey, descriptor) => {
-
-    }
-}
+// const Login = (loginData: LoginFnParams): MethodDecorator => {
+//     return (target, propertyKey, descriptor) => {
+//
+//     }
+// }

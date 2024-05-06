@@ -1,8 +1,9 @@
 {
   "name": "req4d",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "request,but use decorator",
   "main": "./dist/index.js",
+  "files": ["dist","README.md","LICENSE"],
   "scripts": {
     "build:types": "tsc",
     "test": "jest",

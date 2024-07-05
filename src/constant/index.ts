@@ -25,6 +25,9 @@ const FILE_INDEX = 'fileIndex'
 const PARAM_INDEX = 'paramIndex'
 const PARAM_PROPERTY = 'paramProperty'
 
+const  REQ_INTERCEPTOR = 'reqInterceptor'
+const  RES_INTERCEPTOR = 'resInterceptor'
+
 export {
     AXIOS_INSTANCE,
     USE_BEFORE_AOP,
@@ -40,6 +43,8 @@ export {
     EXTRA_CONFIG,
     FILE_INDEX,
     PARAM_INDEX,
-    PARAM_PROPERTY
+    PARAM_PROPERTY,
+    REQ_INTERCEPTOR,
+    RES_INTERCEPTOR
 }
 
